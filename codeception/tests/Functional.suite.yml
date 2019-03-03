@@ -1,0 +1,17 @@
+class_name: FunctionalTester
+modules:
+    enabled:
+        - PhpBrowser
+        - REST
+        - Db
+        - Asserts
+    config:
+        PhpBrowser:
+            url: 'http://localhost:8085'
+        REST:
+            depends: PhpBrowser
+            url: 'http://localhost:8085'
+        Db:
+            dsn: 'pgsql:host=localhost;port=5435;dbname=symfony'
+            user: 'symfony'
+            password: '123456'
