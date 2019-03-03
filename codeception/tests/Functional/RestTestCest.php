@@ -27,6 +27,8 @@ class HelloFromTestCest extends BaseFunctionalCest
 
     public function runConvertWithoutRates_GetError(FunctionalTester $I)
     {
+        $I->updateInDatabase('currency_rate', ['currency_code' => 'US0'], ['currency_code' => 'USD']);
+        $I->updateInDatabase('currency_rate', ['currency_code' => 'RU0'], ['currency_code' => 'RUB']);
         $this->sendConvertRequest([
             'from_currency_code' => 'USD',
             'to_currency_code' => 'RUB',
@@ -39,14 +41,17 @@ class HelloFromTestCest extends BaseFunctionalCest
 
     public function runConvert_GetSuccess(FunctionalTester $I)
     {
-        $I->haveInDatabase('currency_rate', array('id' => 1, 'currency_code' => 'USD', 'rate' => 2.1234));
+        $I->updateInDatabase('currency_rate', ['currency_code' => 'US0'], ['currency_code' => 'USD']);
+        $I->updateInDatabase('currency_rate', ['currency_code' => 'RU0'], ['currency_code' => 'RUB']);
+        $I->haveInDatabase('currency_rate', array('id' => time(), 'currency_code' => 'USD', 'rate' => 5));
+        $I->haveInDatabase('currency_rate', array('id' => time() + 1, 'currency_code' => 'RUB', 'rate' => 1));
         $this->sendConvertRequest([
             'from_currency_code' => 'USD',
             'to_currency_code' => 'RUB',
             'amount' => 1234.5678,
         ], [
             'success' => true,
-            'data' => ['amount_converted' => 581.4109],
+            'data' => ['amount_converted' => 246.9136],
         ]);
     }
 
